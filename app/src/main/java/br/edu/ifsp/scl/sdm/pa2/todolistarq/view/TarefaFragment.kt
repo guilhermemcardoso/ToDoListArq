@@ -12,6 +12,7 @@ import br.edu.ifsp.scl.sdm.pa2.todolistarq.databinding.FragmentTarefaBinding
 import br.edu.ifsp.scl.sdm.pa2.todolistarq.model.entity.Tarefa
 import br.edu.ifsp.scl.sdm.pa2.todolistarq.view.BaseFragment.Constantes.ACAO_TAREFA_EXTRA
 import br.edu.ifsp.scl.sdm.pa2.todolistarq.view.BaseFragment.Constantes.CONSULTA
+import br.edu.ifsp.scl.sdm.pa2.todolistarq.view.BaseFragment.Constantes.ID_INEXISTENTE
 import br.edu.ifsp.scl.sdm.pa2.todolistarq.view.BaseFragment.Constantes.TAREFA_EXTRA
 import br.edu.ifsp.scl.sdm.pa2.todolistarq.view.BaseFragment.Constantes.TAREFA_REQUEST_KEY
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -19,7 +20,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class TarefaFragment : BaseFragment() {
     private lateinit var tarefaController: TarefaController
     private lateinit var fragmentTarefaBinding: FragmentTarefaBinding
-    private val ID_INEXISTENTE = -1L
     private var tarefaExtraId: Long = ID_INEXISTENTE
 
     private var fab: FloatingActionButton? = null
@@ -59,14 +59,6 @@ class TarefaFragment : BaseFragment() {
                     )
                 )
             }
-            // Retorna a tarefa
-            retornaTarefa(
-                Tarefa(
-                    150,
-                    fragmentTarefaBinding.nomeTarefaEt.text.toString(),
-                    if (fragmentTarefaBinding.realizadaTarefaCb.isChecked) 1 else 0
-                )
-            )
         }
 
         // Verificando se trata-se de ação em uma tarefa existente
@@ -96,7 +88,7 @@ class TarefaFragment : BaseFragment() {
         fab?.visibility = View.VISIBLE
     }
 
-    private fun retornaTarefa(tarefa: Tarefa) {
+    fun retornaTarefa(tarefa: Tarefa) {
         setFragmentResult(TAREFA_REQUEST_KEY, Bundle().also {
             it.putParcelable(TAREFA_EXTRA, tarefa)
         })

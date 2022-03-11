@@ -9,5 +9,6 @@ open class BaseFragment: Fragment() {
         val TAREFA_EXTRA = "TAREFA_EXTRA"
         val ACAO_TAREFA_EXTRA = "ACAO_TAREFA_EXTRA"
         val CONSULTA = 1
+        val ID_INEXISTENTE = -1L
     }
 }

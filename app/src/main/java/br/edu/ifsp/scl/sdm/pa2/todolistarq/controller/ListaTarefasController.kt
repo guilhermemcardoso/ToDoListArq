@@ -33,13 +33,9 @@ class ListaTarefasController(private val listaTarefasFragment: ListaTarefasFragm
     }
 
     fun removerTarefa(tarefa: Tarefa) {
-        object : AsyncTask<Unit, Unit, Unit>() {
-            override fun doInBackground(vararg p0: Unit?): Unit {
-                return database.getTarefaDao().removerTarefa(tarefa)
-            }
-
-            override fun onPostExecute(result: Unit?) {
-                super.onPostExecute(result)
+        object : AsyncTask<Tarefa, Unit, Unit>() {
+            override fun doInBackground(vararg p0: Tarefa?) {
+                database.getTarefaDao().removerTarefa(tarefa)
             }
         }.execute()
     }
