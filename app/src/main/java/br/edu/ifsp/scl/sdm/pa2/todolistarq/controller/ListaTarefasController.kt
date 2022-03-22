@@ -1,10 +1,12 @@
 package br.edu.ifsp.scl.sdm.pa2.todolistarq.controller
 
-import android.os.AsyncTask
 import androidx.room.Room
 import br.edu.ifsp.scl.sdm.pa2.todolistarq.model.database.ToDoListArqDatabase
 import br.edu.ifsp.scl.sdm.pa2.todolistarq.model.entity.Tarefa
 import br.edu.ifsp.scl.sdm.pa2.todolistarq.view.ListaTarefasFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ListaTarefasController(private val listaTarefasFragment: ListaTarefasFragment) {
     private val database: ToDoListArqDatabase
@@ -15,28 +17,22 @@ class ListaTarefasController(private val listaTarefasFragment: ListaTarefasFragm
         ).build()
     }
 
-    fun buscarTarefas() {
-        object : AsyncTask<Unit, Unit, List<Tarefa>>() {
-            override fun doInBackground(vararg p0: Unit?): List<Tarefa> {
-                return database.getTarefaDao().recuperarTarefas()
-            }
+    private val escopoCorrotinas = CoroutineScope(Dispatchers.IO)
 
-            override fun onPostExecute(result: List<Tarefa>?) {
-                super.onPostExecute(result)
-                val listaTarefas = mutableListOf<Tarefa>()
-                result?.forEach { tarefa ->
-                    listaTarefas.add(tarefa)
-                }
-                listaTarefasFragment.atualizarListaTarefas(listaTarefas)
+    fun buscarTarefas() {
+        escopoCorrotinas.launch {
+            val tarefas = database.getTarefaDao().recuperarTarefas()
+            val listaTarefas = mutableListOf<Tarefa>()
+            tarefas.forEach { tarefa ->
+                listaTarefas.add(tarefa)
             }
-        }.execute()
+            listaTarefasFragment.atualizarListaTarefas(listaTarefas)
+        }
     }
 
     fun removerTarefa(tarefa: Tarefa) {
-        object : AsyncTask<Tarefa, Unit, Unit>() {
-            override fun doInBackground(vararg p0: Tarefa?) {
-                database.getTarefaDao().removerTarefa(tarefa)
-            }
-        }.execute()
+        escopoCorrotinas.launch {
+            database.getTarefaDao().removerTarefa(tarefa)
+        }
     }
 }
